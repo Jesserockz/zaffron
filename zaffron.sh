@@ -1,0 +1,6 @@
+#!/bin/bash
+
+export HUBOT_HIPCHAT_JID=""
+export HUBOT_HIPCHAT_PASSWORD=""
+
+bin/hubot --adapter hipchat
