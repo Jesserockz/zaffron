@@ -1,6 +1,6 @@
 {
   "name": "Zaffron",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "private": true,
   "author": "Zaffron <zaffron@touchtech.co.nz>",
   "description": "The best AI in Wellington",
@@ -17,7 +17,8 @@
     "hubot-rules": "^0.1.0",
     "hubot-scripts": "^2.5.16",
     "hubot-shipit": "^0.2.0",
-    "hubot-youtube": "^0.1.2"
+    "hubot-youtube": "^0.1.2",
+    "hubot.io": ">= 0.1.0"
   },
   "engines": {
     "node": "0.10.x"
