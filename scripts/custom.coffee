@@ -20,12 +20,6 @@ mornings = [
 ]
 
 
-TIMEZONE = "Pacific/Auckland"
-STARTING_TIME = '0 20 17 * * 2-6' # M-F 5pm
-ROOM = "55213_zaffron@conf.hipchat.com"
-
-cronJob = require('cron').CronJob
-
 module.exports = (robot) ->
   
   name = "(zaffron|zaff)"
@@ -48,13 +42,6 @@ module.exports = (robot) ->
   # ^(?=.*\b hi \b)(?=.*\b name \b).*$
   robot.hear ///^(?=.*\b #{hi} \b)(?=.*\b #{name} \b).*$///i, (msg) ->
     msg.reply "Hello"
-
-  startofday = new cronJob STARTING_TIME,
-    ->
-      robot.messageRoom ROOM, mornings[ Math.floor(Math.random() * mornings.length)]
-    null
-    true
-    TIMEZONE
 
   speakText = (text, res) ->
     @exec = require('child_process').exec
