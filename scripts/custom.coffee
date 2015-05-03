@@ -19,6 +19,7 @@ mornings = [
   "Bonjour @all"
 ]
 
+
 TIMEZONE = "Pacific/Auckland"
 STARTING_TIME = '0 20 17 * * 2-6' # M-F 5pm
 ROOM = "55213_zaffron@conf.hipchat.com"
@@ -26,6 +27,9 @@ ROOM = "55213_zaffron@conf.hipchat.com"
 cronJob = require('cron').CronJob
 
 module.exports = (robot) ->
+  
+  name = "(zaffron|zaff)"
+  hi = "(hi|hello|welcome|yo|hey|howdy|good morning|greetings)"
 
   robot.respond /coffee/i, (res) ->
     line = res.random coffeelines
@@ -41,9 +45,9 @@ module.exports = (robot) ->
     msg.send "Panzy"
 
   # Listen for hellos
-  robot.hear /hello|hi|yo|good morning|halo|hey|howdy|welcome/i, (msg) ->
-    msg.send(msg)
-    console.log msg
+  # ^(?=.*\b hi \b)(?=.*\b name \b).*$
+  robot.hear ///^(?=.*\b #{hi} \b)(?=.*\b #{name} \b).*$///i, (msg) ->
+    msg.reply "Hello"
 
   startofday = new cronJob STARTING_TIME,
     ->
