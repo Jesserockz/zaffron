@@ -3,12 +3,12 @@
   "hubot-help",
   "hubot-google-images",
   "hubot-google-translate",
-  "hubot-pugme",
   "hubot-maps",
   "hubot-redis-brain",
   "hubot-rules",
   "hubot-shipit",
   "hubot-youtube",
   "hubot-plusplus",
-  "hubot-fliptable"
+  "hubot-fliptable",
+  "hubot-standup-alarm"
 ]

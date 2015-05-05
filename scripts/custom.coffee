@@ -2,7 +2,7 @@ coffeelines = [
   "Coffee is ready"
   "Coffee guys, get in the kitchen"
   "Brew complete"
-  "Coffee going cold all alone"
+  "Stop, Coffee time"
 ]
 
 mornings = [
@@ -37,6 +37,11 @@ module.exports = (robot) ->
   # Hubot has an attitude
   robot.hear /tired|too hard|to hard|upset|bored/i, (msg) ->
     msg.send "Panzy"
+
+  robot.respond /introduce yourself/i, (msg) ->
+    msg.send "hi @all"
+    msg.send "My name is zaffron"
+    msg.send "you may command me by mentionsing me first"
 
   # Listen for hellos
   # ^(?=.*\b hi \b)(?=.*\b name \b).*$

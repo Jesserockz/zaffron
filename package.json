@@ -7,20 +7,21 @@
   "dependencies": {
     "hubot": "^2.12.0",
     "hubot-diagnostics": "0.0.1",
+    "hubot-fliptable": ">= 0.0.0",
     "hubot-google-images": "^0.1.4",
     "hubot-google-translate": "^0.1.0",
     "hubot-help": "^0.1.1",
     "hubot-hipchat": "^2.12.0-5",
     "hubot-maps": "0.0.2",
+    "hubot-plusplus": ">= 0.0.0",
     "hubot-pugme": "^0.1.0",
     "hubot-redis-brain": "0.0.2",
     "hubot-rules": "^0.1.0",
     "hubot-scripts": "^2.5.16",
     "hubot-shipit": "^0.2.0",
+    "hubot-standup-alarm": "0.0.4",
     "hubot-youtube": "^0.1.2",
-    "hubot.io": ">= 0.1.0",
-    "hubot-fliptable": ">= 0.0.0",
-    "hubot-plusplus": ">= 0.0.0"
+    "hubot.io": ">= 0.1.0"
   },
   "engines": {
     "node": "0.10.x"

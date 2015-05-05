@@ -7,5 +7,4 @@ export HUBOT_HIPCHAT_TOKEN=""
 
 export HUBOT_ANSWER_TO_LIFE="IllegalQuestionException, no such answer exists"
 
-
 bin/hubot --adapter hipchat
