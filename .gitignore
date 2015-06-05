@@ -1,3 +1,6 @@
 node_modules
 .DS_Store*
 .hubot_history
+bin/.zaffronrc
+zaffron.pid
+zaffron.sh

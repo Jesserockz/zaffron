@@ -31,6 +31,12 @@ mopidy.on 'state:offline', ->
   online = false
 
 module.exports = (robot) ->
+  mopidy.on 'event:track_playback_started', (track) ->
+    if track
+      robot.messageRoom("55213_wump_music@conf.hipchat.com", "Currently playing: #{track.name} by #{track.artists[0].name} from #{track.album.name}")
+    else
+      robot.messageRoom("55213_wump_music@conf.hipchat.com", "No track is playing")
+
   robot.respond /set volume (\d+)/i, (message) ->
     newVolume = parseInt(message.match[1])
     if online
@@ -49,6 +55,32 @@ module.exports = (robot) ->
     else
       message.send('Mopidy is offline')
     mopidy.playback.getVolume().then printCurrentVolume, console.error.bind(console)
+
+  robot.respond /turn it down/i, (message) ->
+    if online
+      turnDownVolume = (volume) ->
+        if volume
+          newVolume = volume - 5
+          message.reply("Sorry, I am turning down to #{newVolume}")
+          mopidy.playback.setVolume(newVolume)
+        else
+          message.send("Sorry, can't change the volume at this time")
+    else
+      message.send("Mopidy is offline")
+    mopidy.playback.getVolume().then turnDownVolume, console.error.bind(console)
+
+  robot.respond /turn it up/i, (message) ->
+    if online
+      turnUpVolume = (volume) ->
+        if volume
+          newVolume = volume + 5
+          message.reply("You got it, turning up to #{newVolume}")
+          mopidy.playback.setVolume(newVolume)
+        else
+          message.send("Sorry, can't change the volume at this time")
+    else
+      message.send("Mopidy is offline")
+    mopidy.playback.getVolume().then turnUpVolume, console.error.bind(console)
 
 
   robot.respond /what'?s playing/i, (message) ->

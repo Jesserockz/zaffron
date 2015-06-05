@@ -2,5 +2,6 @@
   "conversation.coffee",
   "quote.coffee",
   "reload.coffee",
-  "announce.coffee"
+  "announce.coffee",
+  "weather.coffee"
 ]

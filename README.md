@@ -8,11 +8,3 @@ to be used on the [Raspberry Pi][raspberrypi].
 [touchtech]: http://touchtech.co.nz
 [hipchat]: http://hipchat.com
 [raspberrypi]: http://raspberrypi.org
-
-### Running Zaffron
-
-You can start Zaffron by running:
-
-    % ./zaffron.sh
-
-
