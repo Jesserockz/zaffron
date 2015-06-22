@@ -56,13 +56,13 @@ module.exports = (robot) ->
   robot.hear ///^(?=.*\b #{hi} \b)(?=.*\b #{name} \b).*$///i, (msg) ->
     msg.reply "Hello"
 
-  robot.hear /lol|lmao|lulz|rofl/, (res) ->
-    lol = res.random lulz
-    res.send lol
-    if lol=="rofl"
-      speakText "wroffle", res
-    else
-      speakText lol, res
+  #robot.hear /lol|lmao|lulz|rofl/, (res) ->
+  #  lol = res.random lulz
+  #  res.send lol
+    #if lol=="rofl"
+    #  speakText "wroffle", res
+    #else
+    #  speakText lol, res
 
   speakText = (text, res) ->
     @exec = require('child_process').exec
