@@ -29,6 +29,16 @@ lulz = [
 ]
 
 module.exports = (robot) ->
+
+  robot.hear /^(?=.*sorry)(?=.*zaffron).+/i, (msg) ->
+    if robot.brain.get('ignore_mention') == msg.message.user.mention_name
+      robot.brain.set 'ignore', false
+      robot.brain.set 'ignore_mention', ''
+      msg.send 'I forgive you @'+msg.message.user.mention_name
+
+  robot.hear /(.*)$/i, (msg) ->
+    if robot.brain.get('ignore') && robot.brain.get('ignore_mention') == msg.message.user.mention_name
+      msg.finish()
   
   name = "(zaffron|zaff)"
   hi = "(hi|hello|welcome|yo|hey|howdy|good morning|greetings)"
@@ -64,12 +74,17 @@ module.exports = (robot) ->
     #else
     #  speakText lol, res
 
-  #robot.respond /shutup|shut up|fuck off|go away/i, (res) ->
-  #  res.reply res.
+  robot.hear /^(?=.*shutup|shut up|fuck off|go away)(?=.*zaffron).+/i, (res) ->
+    robot.brain.set 'ignore', true
+    robot.brain.set 'ignore_mention', res.message.user.mention_name
+    res.send "fine"
 
-  robot.respond /who am i/i, (res) ->
-    res.reply res.message
-    console.log res.message
+  robot.hear /who am i/i, (msg) ->
+    user = msg.message.user
+    for key, value of user
+      msg.send key + ": " + value
+    #res.send res.message.user.reply_to
+    #console.log res.message
 
   speakText = (text, res) ->
     @exec = require('child_process').exec
