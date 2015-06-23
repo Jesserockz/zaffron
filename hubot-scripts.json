@@ -3,5 +3,6 @@
   "quote.coffee",
   "reload.coffee",
   "announce.coffee",
-  "weather.coffee"
+  "weather.coffee",
+  "hubot-rss-reader"
 ]

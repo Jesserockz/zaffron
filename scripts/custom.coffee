@@ -64,6 +64,13 @@ module.exports = (robot) ->
     #else
     #  speakText lol, res
 
+  #robot.respond /shutup|shut up|fuck off|go away/i, (res) ->
+  #  res.reply res.
+
+  robot.respond /who am i/i, (res) ->
+    res.reply res.message
+    console.log res.message
+
   speakText = (text, res) ->
     @exec = require('child_process').exec
     command = "speech #{text}"
