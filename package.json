@@ -6,6 +6,7 @@
   "description": "The best AI in Wellington",
   "dependencies": {
     "hubot": "^2.12.0",
+    "hubot-cute-me": "^1.0.0",
     "hubot-diagnostics": "0.0.1",
     "hubot-fliptable": ">= 0.0.0",
     "hubot-google-images": "^0.1.4",
@@ -20,8 +21,11 @@
     "hubot-scripts": "^2.5.16",
     "hubot-shipit": "^0.2.0",
     "hubot-standup-alarm": "0.0.4",
-    "hubot-youtube": "^0.1.2",
-    "hubot.io": ">= 0.1.0"
+    "hubot-youtube": "1.0.0",
+    "hubot.io": ">= 0.1.0",
+    "mopidy": "^0.5.0",
+    "parse-rss": "^1.0.3",
+    "underscore": "^1.8.3"
   },
   "engines": {
     "node": "0.10.x"
