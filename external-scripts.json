@@ -10,5 +10,6 @@
   "hubot-youtube",
   "hubot-fliptable",
   "hubot-standup-alarm",
-  "hubot-cute-me"
+  "hubot-cute-me",
+  "hubot-currency",
 ]
