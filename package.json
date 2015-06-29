@@ -28,7 +28,7 @@
     "hubot-youtube": "^0.1.2",
     "hubot.io": ">= 0.1.0",
     "lodash": "^3.9.3",
-    "moment": "^2.10.3"
+    "moment": "^2.10.3",
     "hubot-stockstuff": "0.0.1",
     "hubot.io": ">= 0.1.0",
     "mopidy": "^0.5.0",
