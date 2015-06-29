@@ -96,7 +96,7 @@ module.exports = (robot) ->
     else
       message.send('Mopidy is offline')
 
-  robot.respond /what'?s playing/i, (message) ->
+  robot.hear /what'?(s | is )?playing/i, (message) ->
     if online
       printCurrentTrack = (track) ->
         if track

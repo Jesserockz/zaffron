@@ -8,10 +8,7 @@
   "hubot-rules",
   "hubot-shipit",
   "hubot-youtube",
-  "hubot-plusplus",
   "hubot-fliptable",
   "hubot-standup-alarm",
-  "hubot-cute-me",
-  "hubot-currency",
-  "hubot-stockstuff"
+  "hubot-cute-me"
 ]
