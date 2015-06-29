@@ -133,7 +133,7 @@ module.exports = (robot) ->
     else
       message.send('Mopidy is offline')
 
-  robot.respond /pause music/i, (message) ->
+  robot.respond /pause music|turn it off/i, (message) ->
     if online
       mopidy.playback.pause()
       message.send('Music paused')
