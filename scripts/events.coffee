@@ -21,16 +21,23 @@ module.exports = (robot) ->
     eventUrl = ""
 
     location = res.match[1].trim()
-
+    console.log location
     if location? && location != ""
       if  _.contains locations, location.toLowerCase()
         eventUrl= "#{eventBaseUrl}/#{location}"
         searchMessage = "#{searchMessage} #{location} ..."
+      else
+        invalidMessage = "Sorry, cannot map the location your search for.\n"
+        invalidMessage += "Plase try /events <[all | wellington | auckland]>"
+        res.send invalidMessage
+        return
     else
       eventUrl= "#{eventBaseUrl}/all"
-      searchMessage = "Sorry, cannot map your location, search all events for you ..."
+      searchMessage = "Search all events for you ..."
 
     res.send searchMessage
+
+    #Search & Parsing
     parser eventUrl , (err, rss) ->
       if err
         res.send errorMessage
