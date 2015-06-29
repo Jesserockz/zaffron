@@ -32,27 +32,21 @@ module.exports = (robot) ->
   #   res.send "#{res.message.text}? That's a Paddlin'"
   #
   #
-  # enterReplies = ['Hi', 'Target Acquired', 'Firing', 'Hello friend.', 'Gotcha', 'I see you']
-  # leaveReplies = ['Are you still there?', 'Target lost', 'Searching']
-  #
-  # robot.enter (res) ->
-  #   res.send res.random enterReplies
-  # robot.leave (res) ->
-  #   res.send res.random leaveReplies
+
   #
    answer = process.env.HUBOT_ANSWER_TO_LIFE
-  
+
    robot.respond /what is the answer to the ultimate question of life/, (res) ->
      unless answer?
        res.send "Missing HUBOT_ANSWER_TO_LIFE in environment: please set and try again"
        return
      res.send "#{answer}"
-  
+
    robot.respond /you are a little slow/, (res) ->
      setTimeout () ->
        res.send "Who you calling 'slow'?"
      , 60 * 1000
-  
+
   # annoyIntervalId = null
   #
   # robot.respond /annoy me/, (res) ->
