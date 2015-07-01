@@ -195,7 +195,7 @@ jenkinsList = (msg, robot) ->
             jobList.push(job.name)
             index = jobList.indexOf(job.name)
 
-          state = if job.color == "red" then "  FAIL  " else "  PASS  "
+          state = if job.color == "red" then "FAILED" else "PASSED"
           disabled = !robot.brain.get("jenkins-hide-disabled")
           samples = !robot.brain.get("jenkins-hide-samples")
           if filter.test job.name
@@ -203,7 +203,7 @@ jenkinsList = (msg, robot) ->
             index = if index < 10 then " #{index}" else "#{index}"
             if job.name.indexOf("sample") == 0
               if samples
-                response += "[#{index}] [ SAMPLE ] #{job.name}\n"
+                response += "[#{index}] [SAMPLE] #{job.name}\n"
             else if job.color == "disabled"
               if disabled
                 response += "[#{index}] [DISABLED] #{job.name}\n"
