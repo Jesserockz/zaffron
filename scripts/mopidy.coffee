@@ -29,20 +29,17 @@ mopidy.on 'state:online', ->
   online = true
 mopidy.on 'state:offline', ->
   online = false
-#mopidy.on(console.log.bind(console));
 
 module.exports = (robot) ->
-  mopidy.on 'event:trackPlaybackStarted', (obj) ->
-  #  console.log obj
-    tltrack = obj.tl_track
-  #  console.log tltrack
-    if tltrack
-      track = tltrack.track
-#      robot.messageRoom("55213_wump_music@conf.hipchat.com", "Currently playing: #{track.name} by #{track.artists[0].name} from #{track.album.name}")
-   #   robot.messageRoom("55213_wump_music@conf.hipchat.com", "/topic #{track.name} by #{track.artists[0].name}")
-    else
-      robot.messageRoom("55213_wump_music@conf.hipchat.com", "No music is playing")
-   #   robot.messageRoom("55213_wump_music@conf.hipchat.com", "/topic No track is playing")
+  # mopidy.on 'event:trackPlaybackStarted', (obj) ->
+  #   tltrack = obj.tl_track
+  #   if tltrack
+  #     track = tltrack.track
+  #     robot.messageRoom("55213_wump_music@conf.hipchat.com", "Currently playing: #{track.name} by #{track.artists[0].name} from #{track.album.name}")
+  #     robot.messageRoom("55213_wump_music@conf.hipchat.com", "/topic #{track.name} by #{track.artists[0].name}")
+  #   else
+  #     robot.messageRoom("55213_wump_music@conf.hipchat.com", "No music is playing")
+  #     robot.messageRoom("55213_wump_music@conf.hipchat.com", "/topic No track is playing")
 
   robot.respond /set volume (\d+)/i, (message) ->
     newVolume = parseInt(message.match[1])
