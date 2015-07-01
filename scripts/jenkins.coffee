@@ -40,176 +40,176 @@ jenkinsBuildById = (msg) ->
     msg.reply "I couldn't find that job. Try `jenkins list` to get a list."
 
 jenkinsBuild = (msg, buildWithEmptyParameters) ->
-    url = process.env.HUBOT_JENKINS_URL
-    job = querystring.escape msg.match[1]
-    params = msg.match[3]
-    command = if buildWithEmptyParameters then "buildWithParameters" else "build"
-    path = if params then "#{url}/job/#{job}/buildWithParameters?#{params}" else "#{url}/job/#{job}/#{command}"
+  url = process.env.HUBOT_JENKINS_URL
+  job = querystring.escape msg.match[1]
+  params = msg.match[3]
+  command = if buildWithEmptyParameters then "buildWithParameters" else "build"
+  path = if params then "#{url}/job/#{job}/buildWithParameters?#{params}" else "#{url}/job/#{job}/#{command}"
 
-    req = msg.http(path)
+  req = msg.http(path)
 
-    if process.env.HUBOT_JENKINS_AUTH
-      auth = new Buffer(process.env.HUBOT_JENKINS_AUTH).toString('base64')
-      req.headers Authorization: "Basic #{auth}"
+  if process.env.HUBOT_JENKINS_AUTH
+    auth = new Buffer(process.env.HUBOT_JENKINS_AUTH).toString('base64')
+    req.headers Authorization: "Basic #{auth}"
 
-    req.header('Content-Length', 0)
-    req.post() (err, res, body) ->
-        if err
-          msg.reply "Jenkins says: #{err}"
-        else if 200 <= res.statusCode < 400 # Or, not an error code.
-          msg.reply "(#{res.statusCode}) Build started for #{job} #{url}/job/#{job}"
-        else if 400 == res.statusCode
-          jenkinsBuild(msg, true)
-        else
-          msg.reply "Jenkins says: Status #{res.statusCode} #{body}"
+  req.header('Content-Length', 0)
+  req.post() (err, res, body) ->
+    if err
+      msg.reply "Jenkins says: #{err}"
+    else if 200 <= res.statusCode < 400 # Or, not an error code.
+      msg.reply "(#{res.statusCode}) Build started for #{job} #{url}/job/#{job}"
+    else if 400 == res.statusCode
+      jenkinsBuild(msg, true)
+    else
+      msg.reply "Jenkins says: Status #{res.statusCode} #{body}"
 
 jenkinsDescribe = (msg) ->
-    url = process.env.HUBOT_JENKINS_URL
-    job = msg.match[1]
+  url = process.env.HUBOT_JENKINS_URL
+  job = msg.match[1]
 
-    path = "#{url}/job/#{job}/api/json"
+  path = "#{url}/job/#{job}/api/json"
 
-    req = msg.http(path)
+  req = msg.http(path)
 
-    if process.env.HUBOT_JENKINS_AUTH
-      auth = new Buffer(process.env.HUBOT_JENKINS_AUTH).toString('base64')
-      req.headers Authorization: "Basic #{auth}"
+  if process.env.HUBOT_JENKINS_AUTH
+    auth = new Buffer(process.env.HUBOT_JENKINS_AUTH).toString('base64')
+    req.headers Authorization: "Basic #{auth}"
 
-    req.header('Content-Length', 0)
-    req.get() (err, res, body) ->
-        if err
-          msg.send "Jenkins says: #{err}"
+  req.header('Content-Length', 0)
+  req.get() (err, res, body) ->
+    if err
+      msg.send "Jenkins says: #{err}"
+    else
+      response = ""
+      try
+        content = JSON.parse(body)
+        response += "JOB: #{content.displayName}\n"
+        response += "URL: #{content.url}\n"
+
+        if content.description
+          response += "DESCRIPTION: #{content.description}\n"
+
+        response += "ENABLED: #{content.buildable}\n"
+        response += "STATUS: #{content.color}\n"
+
+        tmpReport = ""
+        if content.healthReport.length > 0
+          for report in content.healthReport
+            tmpReport += "\n  #{report.description}"
         else
-          response = ""
-          try
-            content = JSON.parse(body)
-            response += "JOB: #{content.displayName}\n"
-            response += "URL: #{content.url}\n"
+          tmpReport = " unknown"
+        response += "HEALTH: #{tmpReport}\n"
 
-            if content.description
-              response += "DESCRIPTION: #{content.description}\n"
+        parameters = ""
+        for item in content.actions
+          if item.parameterDefinitions
+            for param in item.parameterDefinitions
+              tmpDescription = if param.description then " - #{param.description} " else ""
+              tmpDefault = if param.defaultParameterValue then " (default=#{param.defaultParameterValue.value})" else ""
+              parameters += "\n  #{param.name}#{tmpDescription}#{tmpDefault}"
 
-            response += "ENABLED: #{content.buildable}\n"
-            response += "STATUS: #{content.color}\n"
+        if parameters != ""
+          response += "PARAMETERS: #{parameters}\n"
 
-            tmpReport = ""
-            if content.healthReport.length > 0
-              for report in content.healthReport
-                tmpReport += "\n  #{report.description}"
+        msg.send response
+
+        if not content.lastBuild
+          return
+
+        path = "#{url}/job/#{job}/#{content.lastBuild.number}/api/json"
+        req = msg.http(path)
+        if process.env.HUBOT_JENKINS_AUTH
+          auth = new Buffer(process.env.HUBOT_JENKINS_AUTH).toString('base64')
+          req.headers Authorization: "Basic #{auth}"
+
+        req.header('Content-Length', 0)
+        req.get() (err, res, body) ->
+            if err
+              msg.send "Jenkins says: #{err}"
             else
-              tmpReport = " unknown"
-            response += "HEALTH: #{tmpReport}\n"
+              response = ""
+              try
+                content = JSON.parse(body)
+                console.log(JSON.stringify(content, null, 4))
+                jobstatus = content.result || 'PENDING'
+                jobdate = new Date(content.timestamp);
+                response += "LAST JOB: #{jobstatus}, #{jobdate}\n"
 
-            parameters = ""
-            for item in content.actions
-              if item.parameterDefinitions
-                for param in item.parameterDefinitions
-                  tmpDescription = if param.description then " - #{param.description} " else ""
-                  tmpDefault = if param.defaultParameterValue then " (default=#{param.defaultParameterValue.value})" else ""
-                  parameters += "\n  #{param.name}#{tmpDescription}#{tmpDefault}"
+                msg.send response
+              catch error
+                msg.send error
 
-            if parameters != ""
-              response += "PARAMETERS: #{parameters}\n"
-
-            msg.send response
-
-            if not content.lastBuild
-              return
-
-            path = "#{url}/job/#{job}/#{content.lastBuild.number}/api/json"
-            req = msg.http(path)
-            if process.env.HUBOT_JENKINS_AUTH
-              auth = new Buffer(process.env.HUBOT_JENKINS_AUTH).toString('base64')
-              req.headers Authorization: "Basic #{auth}"
-
-            req.header('Content-Length', 0)
-            req.get() (err, res, body) ->
-                if err
-                  msg.send "Jenkins says: #{err}"
-                else
-                  response = ""
-                  try
-                    content = JSON.parse(body)
-                    console.log(JSON.stringify(content, null, 4))
-                    jobstatus = content.result || 'PENDING'
-                    jobdate = new Date(content.timestamp);
-                    response += "LAST JOB: #{jobstatus}, #{jobdate}\n"
-
-                    msg.send response
-                  catch error
-                    msg.send error
-
-          catch error
-            msg.send error
+      catch error
+        msg.send error
 
 jenkinsLast = (msg) ->
-    url = process.env.HUBOT_JENKINS_URL
-    job = msg.match[1]
+  url = process.env.HUBOT_JENKINS_URL
+  job = msg.match[1]
 
-    path = "#{url}/job/#{job}/lastBuild/api/json"
+  path = "#{url}/job/#{job}/lastBuild/api/json"
 
-    req = msg.http(path)
+  req = msg.http(path)
 
-    if process.env.HUBOT_JENKINS_AUTH
-      auth = new Buffer(process.env.HUBOT_JENKINS_AUTH).toString('base64')
-      req.headers Authorization: "Basic #{auth}"
+  if process.env.HUBOT_JENKINS_AUTH
+    auth = new Buffer(process.env.HUBOT_JENKINS_AUTH).toString('base64')
+    req.headers Authorization: "Basic #{auth}"
 
-    req.header('Content-Length', 0)
-    req.get() (err, res, body) ->
-        if err
-          msg.send "Jenkins says: #{err}"
-        else
-          response = ""
-          try
-            content = JSON.parse(body)
-            response += "NAME: #{content.fullDisplayName}\n"
-            response += "URL: #{content.url}\n"
+  req.header('Content-Length', 0)
+  req.get() (err, res, body) ->
+    if err
+      msg.send "Jenkins says: #{err}"
+    else
+      response = ""
+      try
+        content = JSON.parse(body)
+        response += "NAME: #{content.fullDisplayName}\n"
+        response += "URL: #{content.url}\n"
 
-            if content.description
-              response += "DESCRIPTION: #{content.description}\n"
+        if content.description
+          response += "DESCRIPTION: #{content.description}\n"
 
-            response += "BUILDING: #{content.building}\n"
+        response += "BUILDING: #{content.building}\n"
 
-            msg.send response
+        msg.send response
 
-jenkinsList = (msg) ->
-    url = process.env.HUBOT_JENKINS_URL
-    filter = new RegExp(msg.match[2], 'i')
-    req = msg.http("#{url}/api/json")
+jenkinsList = (msg, robot) ->
+  url = process.env.HUBOT_JENKINS_URL
+  filter = new RegExp(msg.match[2], 'i')
+  req = msg.http("#{url}/api/json")
 
-    if process.env.HUBOT_JENKINS_AUTH
-      auth = new Buffer(process.env.HUBOT_JENKINS_AUTH).toString('base64')
-      req.headers Authorization: "Basic #{auth}"
+  if process.env.HUBOT_JENKINS_AUTH
+    auth = new Buffer(process.env.HUBOT_JENKINS_AUTH).toString('base64')
+    req.headers Authorization: "Basic #{auth}"
 
-    req.get() (err, res, body) ->
-        response = ""
-        if err
-          msg.send "Jenkins says: #{err}"
-        else
-          try
-            content = JSON.parse(body)
-            for job in content.jobs
-              # Add the job to the jobList
-              index = jobList.indexOf(job.name)
-              if index == -1
-                jobList.push(job.name)
-                index = jobList.indexOf(job.name)
+  req.get() (err, res, body) ->
+    response = ""
+    if err
+      msg.send "Jenkins says: #{err}"
+    else
+      try
+        content = JSON.parse(body)
+        for job in content.jobs
+          # Add the job to the jobList
+          index = jobList.indexOf(job.name)
+          if index == -1
+            jobList.push(job.name)
+            index = jobList.indexOf(job.name)
 
-              state = if job.color == "red" then "FAIL" else "PASS"
-              disabled = robot.brain.get('jenkins-disabled') or true
-              samples = robot.brain.get('jenkins-samples') or true
-              if filter.test job.name
-                if !samples
-                  if job.name.indexOf("sample") != 0
-                    response += "[#{index + 1}] [#{state}] #{job.name}\n"
-                else if !disabled
-                  if job.color != "disabled"
-                    response += "[#{index + 1}] [#{state}] #{job.name}\n"
-                else
-                  response += "[#{index + 1}] [#{state}] #{job.name}\n"
-            msg.send response
-          catch error
-            msg.send error
+          state = if job.color == "red" then "FAIL" else "PASS"
+          disabled = !robot.brain.get("jenkins-hide-disabled")
+          samples = !robot.brain.get("jenkins-hide-samples")
+          if filter.test job.name
+            if job.name.indexOf("sample") == 0
+              if samples
+                response += "[#{index + 1}] [#{state}] #{job.name}\n"
+            else if job.color == "disabled"
+              if disabled
+                response += "[#{index + 1}] [#{state}] #{job.name}\n"
+            else
+              response += "[#{index + 1}] [#{state}] #{job.name}\n"
+        msg.send response
+      catch error
+        msg.send error
 
 module.exports = (robot) ->
   robot.respond /j(?:enkins)? build ([\w\.\-_ ]+)(, (.+))?/i, (msg) ->
@@ -219,7 +219,7 @@ module.exports = (robot) ->
     jenkinsBuildById(msg)
 
   robot.respond /j(?:enkins)? list( (.+))?/i, (msg) ->
-    jenkinsList(msg)
+    jenkinsList(msg, robot)
 
   robot.respond /j(?:enkins)? describe (.*)/i, (msg) ->
     jenkinsDescribe(msg)
@@ -228,10 +228,14 @@ module.exports = (robot) ->
     jenkinsLast(msg)
 
   robot.respond /j(?:enkins)? (show|hide) disabled/i, (msg) ->
-    robot.brain.set 'jenkins-disabled', msg.match[1] == "show"
+    robot.brain.set "jenkins-hide-disabled", msg.match[1] == "hide"
+    robot.brain.save()
+    msg.send if msg.match[1] == "show" then "Showing disabled jobs" else "Not showing disabled jobs now"
 
   robot.respond /j(?:enkins)? (show|hide) samples/i, (msg) ->
-    robot.brain.set 'jenkins-samples', msg.match[1] == "show"
+    robot.brain.set "jenkins-hide-samples", msg.match[1] == "hide"
+    robot.brain.save()
+    msg.send if msg.match[1] == "show" then "Showing sample jobs" else "Not showing sample jobs now"
 
   robot.jenkins = {
     list: jenkinsList,
