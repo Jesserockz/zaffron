@@ -23,7 +23,7 @@
 
 Mopidy = require("mopidy")
 
-mopidy = new Mopidy(webSocketUrl: 'ws://localhost:6680/mopidy/ws/')
+mopidy = new Mopidy(webSocketUrl: 'ws://wumppi:6680/mopidy/ws/')
 online = false
 mopidy.on 'state:online', ->
   online = true
