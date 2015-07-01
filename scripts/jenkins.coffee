@@ -196,8 +196,16 @@ jenkinsList = (msg) ->
                 index = jobList.indexOf(job.name)
 
               state = if job.color == "red" then "FAIL" else "PASS"
+              disabled = robot.brain.get('jenkins-disabled') or true
+              samples = robot.brain.get('jenkins-samples') or true
               if filter.test job.name
-                if job.color != "disabled"
+                if !samples
+                  if job.name.indexOf("sample") != 0
+                    response += "[#{index + 1}] [#{state}] #{job.name}\n"
+                else if !disabled
+                  if job.color != "disabled"
+                    response += "[#{index + 1}] [#{state}] #{job.name}\n"
+                else
                   response += "[#{index + 1}] [#{state}] #{job.name}\n"
             msg.send response
           catch error
@@ -218,6 +226,12 @@ module.exports = (robot) ->
 
   robot.respond /j(?:enkins)? last (.*)/i, (msg) ->
     jenkinsLast(msg)
+
+  robot.respond /j(?:enkins)? (show|hide) disabled/i, (msg) ->
+    robot.brain.set 'jenkins-disabled', msg.match[1] == "show"
+
+  robot.respind /j(?:enkins)? (show|hide) samples/i, (msg) ->
+    robot.brain.set 'jenkins-samples', msg.match[1] == "show"
 
   robot.jenkins = {
     list: jenkinsList,
