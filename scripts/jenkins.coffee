@@ -230,7 +230,7 @@ module.exports = (robot) ->
   robot.respond /j(?:enkins)? (show|hide) disabled/i, (msg) ->
     robot.brain.set 'jenkins-disabled', msg.match[1] == "show"
 
-  robot.respind /j(?:enkins)? (show|hide) samples/i, (msg) ->
+  robot.respond /j(?:enkins)? (show|hide) samples/i, (msg) ->
     robot.brain.set 'jenkins-samples', msg.match[1] == "show"
 
   robot.jenkins = {
