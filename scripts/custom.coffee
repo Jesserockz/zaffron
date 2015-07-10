@@ -28,6 +28,8 @@ lulz = [
   "ha ha"
 ]
 
+say = require("say")
+
 module.exports = (robot) ->
 
   robot.hear /^(?=.*sorry)(?=.*zaffron).+/i, (msg) ->
@@ -39,18 +41,18 @@ module.exports = (robot) ->
   robot.hear /(.*)$/i, (msg) ->
     if robot.brain.get('ignore') && robot.brain.get('ignore_mention') == msg.message.user.mention_name
       msg.finish()
-  
+
   name = "(zaffron|zaff)"
   hi = "(hi|hello|welcome|yo|hey|howdy|good morning|greetings)"
 
   robot.respond /coffee/i, (res) ->
     line = res.random coffeelines
     res.send line
-    speakText line, res
+    speakText "good news", line, res
 
   robot.respond /say (.*)$/i, (res) ->
     text = res.match[1]
-    speakText text, res
+    speakText "alex", text, res
 
   # Hubot has an attitude
   robot.hear /tired|too hard|to hard|upset|bored/i, (msg) ->
@@ -70,9 +72,9 @@ module.exports = (robot) ->
   #  lol = res.random lulz
   #  res.send lol
     #if lol=="rofl"
-    #  speakText "wroffle", res
+    #  speakText "hysterical", "wroffle", res
     #else
-    #  speakText lol, res
+    #  speakText "hysterical", lol, res
 
   robot.hear /^(?=.*shutup|shut up|fuck off|go away)(?=.*zaffron).+/i, (res) ->
     robot.brain.set 'ignore', true
@@ -86,10 +88,5 @@ module.exports = (robot) ->
     #res.send res.message.user.reply_to
     #console.log res.message
 
-  speakText = (text, res) ->
-    @exec = require('child_process').exec
-    command = "speech #{text}"
-    @exec command, (error, stdout, stderr) ->
-      #res.send error
-      #res.send stdout
-      res.send stderr
+  speakText = (voice, text, res) ->
+    say.speak(voice,text);
