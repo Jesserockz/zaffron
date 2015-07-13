@@ -54,10 +54,6 @@ module.exports = (robot) ->
     text = res.match[1]
     speakText "alex", text, res
 
-  # Hubot has an attitude
-  robot.hear /tired|too hard|to hard|upset|bored/i, (msg) ->
-    msg.send "Panzy"
-
   robot.respond /introduce yourself/i, (msg) ->
     msg.send "hi @all"
     msg.send "My name is zaffron"
