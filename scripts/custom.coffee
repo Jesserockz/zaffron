@@ -48,11 +48,10 @@ module.exports = (robot) ->
   robot.respond /coffee/i, (res) ->
     line = res.random coffeelines
     res.send line
-    speakText "good news", line, res
-
-  robot.respond /say (.*)$/i, (res) ->
-    text = res.match[1]
-    speakText "alex", text, res
+    robot.emit "speakText", {
+      voice : "good news",
+      text  : line
+    }
 
   robot.respond /introduce yourself/i, (msg) ->
     msg.send "hi @all"
