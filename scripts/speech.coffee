@@ -10,8 +10,13 @@ module.exports = (robot) ->
     text = res.match[1]
     speakText "whisper", text
 
+  robot.respond /speak (\w+) (.*)$/i, (res) ->
+    voice = res.match[1]
+    text = res.match[2]
+    speakText voice, text
+
   robot.on "speakText",(data) ->
     speakText data.voice, data.text
 
   speakText = (voice,text) ->
-    say.speak(data.voice,data.text)
+    say.speak(voice, text)

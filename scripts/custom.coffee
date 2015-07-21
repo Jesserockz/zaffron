@@ -28,8 +28,6 @@ lulz = [
   "ha ha"
 ]
 
-say = require("say")
-
 module.exports = (robot) ->
 
   robot.hear /^(?=.*sorry)(?=.*zaffron).+/i, (msg) ->
@@ -82,6 +80,3 @@ module.exports = (robot) ->
       msg.send key + ": " + value
     #res.send res.message.user.reply_to
     #console.log res.message
-
-  speakText = (voice, text, res) ->
-    say.speak(voice,text);
