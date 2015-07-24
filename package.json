@@ -8,6 +8,7 @@
     "chrono-node": "^1.0.6",
     "coffee-script": "^1.9.3",
     "hubot": "^2.13.2",
+    "hubot-calculator": "^0.4.0",
     "hubot-currency": "^1.0.1",
     "hubot-cute-me": "^1.0.0",
     "hubot-diagnostics": "0.0.1",
