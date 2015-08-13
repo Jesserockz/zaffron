@@ -4,5 +4,6 @@
   "announce.coffee",
   "weather.coffee",
   "hubot-rss-reader",
-  "remind.coffee"
+  "remind.coffee",
+  "corgime.coffee"
 ]
