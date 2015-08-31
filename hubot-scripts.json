@@ -1,6 +1,5 @@
 [
   "conversation.coffee",
-  "quote.coffee",
   "announce.coffee",
   "weather.coffee",
   "hubot-rss-reader",
