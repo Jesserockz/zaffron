@@ -1,4 +1,5 @@
 #!/bin/bash
+export PATH=/usr/local/bin:$PATH
 cd /Users/touchtech/workspace/zaffron
 git pull origin master
 npm install
