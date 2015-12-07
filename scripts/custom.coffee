@@ -69,7 +69,7 @@ module.exports = (robot) ->
     #else
     #  speakText "hysterical", lol, res
 
-  robot.hear /^(?=.*shutup|shut up|fuck off|go away)(?=.*zaffron).+/i, (res) ->
+  robot.hear /^(?=.*shut ?up|.*fuck (off|you)|.*go away)(?=.*zaffron).+/i, (res) ->
     robot.brain.set 'ignore', true
     robot.brain.set 'ignore_mention', res.message.user.mention_name
     res.send "fine"
