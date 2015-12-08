@@ -97,7 +97,7 @@ module.exports = (robot) ->
     if online
       printCurrentTrack = (track) ->
         if track
-          message.send("Currently playing: #{track.name} by #{track.artists[0].name} from #{track.album.name}")
+          message.send("Currently playing: #{track.name} by #{track.artists.map {|artist| artist.name}.join(", ")} from #{track.album.name}")
         else
           message.send("No track is playing")
     else
@@ -109,7 +109,7 @@ module.exports = (robot) ->
       mopidy.playback.next()
       printCurrentTrack = (track) ->
         if track
-          message.send("Now playing: #{track.name} by #{track.artists[0].name} from #{track.album.name}")
+          message.send("Now playing: #{track.name} by #{track.artists.map {|artist| artist.name}.join(", ")} from #{track.album.name}")
         else
           message.send("No track is playing")
     else
