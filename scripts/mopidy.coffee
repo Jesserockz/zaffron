@@ -109,7 +109,9 @@ module.exports = (robot) ->
       mopidy.playback.next()
       printCurrentTrack = (track) ->
         if track
-          message.send("Now playing: #{track.name} by #{track.artists.map {|artist| artist.name}.join(", ")} from #{track.album.name}")
+          artists = ""
+          artists += "#{artist.name}, " for artist in track.artists
+          message.send("Now playing: #{track.name} by #{artists}from #{track.album.name}")
         else
           message.send("No track is playing")
     else
