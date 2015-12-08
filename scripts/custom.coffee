@@ -28,6 +28,13 @@ lulz = [
   "ha ha"
 ]
 
+friend = [
+  "buddy",
+  "pal",
+  "friend",
+  "dude"
+]
+
 module.exports = (robot) ->
 
   robot.hear /^(?=.*sorry)(?=.*zaffron).+/i, (msg) ->
@@ -69,10 +76,13 @@ module.exports = (robot) ->
     #else
     #  speakText "hysterical", lol, res
 
-  robot.hear /^(?=.*shut ?up|.*fuck (off|you)|.*go away|.*i hate you)(?=.*zaffron).+/i, (res) ->
+  robot.hear /^(?=.*shut ?up|.*fuck ?(off|you)?|.*go away|.*i hate you)(?=.*zaffron).+/i, (res) ->
     robot.brain.set 'ignore', true
     robot.brain.set 'ignore_mention', res.message.user.mention_name
     res.send "fine"
+
+  robot.hear /^(?=.*love|.*forgive)(?=.*zaffron).+/i, (res) ->
+    res.send "Thanks "+res.random friend
 
   robot.hear /who am i/i, (msg) ->
     user = msg.message.user
