@@ -106,7 +106,7 @@ module.exports = (robot) ->
       message.send('Mopidy is offline')
     mopidy.playback.getCurrentTrack().then printCurrentTrack, console.error.bind(console)
 
-  robot.respond /next track|skip track/i, (message) ->
+  robot.respond /next (?=track)?|(?=skip)+ (?=track)?/i, (message) ->
     if online
       mopidy.playback.next()
       printCurrentTrack = (track) ->
