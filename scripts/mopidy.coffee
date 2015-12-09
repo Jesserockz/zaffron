@@ -74,7 +74,7 @@ module.exports = (robot) ->
             res.send("Already blacklisted")
     mopidy.playback.getCurrentTrack().then getCurrentTrack, console.error.bind(console)
 
-  robot.response /blacklist/i, (res) ->
+  robot.respond /blacklist/i, (res) ->
     song_blacklist = robot.brain.get 'music-blacklist'
     if not song_blacklist
       song_blacklist = []
@@ -95,6 +95,7 @@ module.exports = (robot) ->
     out += "\n"
     out += "Current artist list:"
     out += "  [#{index}] - #{artist}\n" for artist, index in artist_blacklist
+    res.send(out)
 
   robot.respond /set volume (\d+)/i, (message) ->
     newVolume = parseInt(message.match[1])
