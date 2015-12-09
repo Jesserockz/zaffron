@@ -74,6 +74,35 @@ module.exports = (robot) ->
             res.send("Already blacklisted")
     mopidy.playback.getCurrentTrack().then getCurrentTrack, console.error.bind(console)
 
+  robot.respond /blacklist artist/i, (res) ->
+    blacklist = robot.brain.get 'music-blacklist-artists'
+    if not blacklist
+      blacklist = []
+    getCurrentTrack = (t) ->
+        if t
+          if t.artists.length > 1
+            out = "Choose an artist to blacklist:\n"
+            out += "  [{#index}] - #{artist.name}\n" for artist, index in t.artists
+          else
+            blacklist.push t.artists[0].name
+            robot.brain.set 'music-blacklist-artists', blacklist
+            res.send("Blacklisted artist #{t.artists[0].name}")
+            mopidy.playback.next()
+    mopidy.playback.getCurrentTrack().then getCurrentTrack, console.error.bind(console)
+
+  robot.respond /blacklist artist (\d+)/i, (res) ->
+    blacklist = robot.brain.get 'music-blacklist-artists'
+    if not blacklist
+      blacklist = []
+    getCurrentTrack = (t) ->
+        if t
+          if res.match[1] < t.artists.length
+            blacklist.push t.artists[res.match[1]].name
+            robot.brain.set 'music-blacklist-artists', blacklist
+            res.send("Blacklisted artist #{t.artists[0].name}")
+            mopidy.playback.next()
+    mopidy.playback.getCurrentTrack().then getCurrentTrack, console.error.bind(console)
+
   robot.respond /blacklist/i, (res) ->
     song_blacklist = robot.brain.get 'music-blacklist'
     if not song_blacklist
@@ -90,12 +119,24 @@ module.exports = (robot) ->
     out += "  'blacklist remove (id)' - Remove song from blacklist using id\n"
     out += "  'blacklist remove artist (id)' - Remove artist from blacklist using id\n"
     out += "\n"
-    out += "Current song list:"
+    out += "Current song list:\n"
     out += "  [#{index}] - #{title}\n" for title, index in song_blacklist
     out += "\n"
     out += "Current artist list:"
     out += "  [#{index}] - #{artist}\n" for artist, index in artist_blacklist
     res.send(out)
+
+  robot.respond /blacklist remove (\d+)/i, (res) ->
+    index = res.match[1]
+    song_blacklist = robot.brain.get 'music-blacklist'
+    if not song_blacklist
+      song_blacklist = []
+    if index < song_blacklist.list
+      title = song_blacklist[index]
+      song_blacklist.splice(title, 1)
+      res.send("Removed " + title + " from blacklist")
+    else
+      res.send("Invalid id")
 
   robot.respond /set volume (\d+)/i, (message) ->
     newVolume = parseInt(message.match[1])
