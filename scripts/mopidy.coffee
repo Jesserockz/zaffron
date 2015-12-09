@@ -59,6 +59,8 @@ module.exports = (robot) ->
 
   robot.respond /blacklist/i, (res) ->
     blacklist = robot.brain.get 'music-blacklist'
+    if not blacklist
+      blacklist = []
     getCurrentTrack = (t) ->
         if t
           if t.name not in blacklist
