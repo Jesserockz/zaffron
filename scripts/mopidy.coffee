@@ -65,6 +65,7 @@ module.exports = (robot) ->
             blacklist.push t.name
             robot.brain.set 'music-blacklist', blacklist
             res.send("Blacklisted #{t.name}")
+            mopidy.playback.next()
           else
             res.send("Already blacklisted")
 
