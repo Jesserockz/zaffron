@@ -59,7 +59,7 @@ module.exports = (robot) ->
   #     robot.messageRoom("55213_wump_music@conf.hipchat.com", "No music is playing")
   #     robot.messageRoom("55213_wump_music@conf.hipchat.com", "/topic No track is playing")
 
-  robot.respond /blacklist/i, (res) ->
+  robot.respond /blacklist song/i, (res) ->
     blacklist = robot.brain.get 'music-blacklist'
     if not blacklist
       blacklist = []
@@ -73,6 +73,28 @@ module.exports = (robot) ->
           else
             res.send("Already blacklisted")
     mopidy.playback.getCurrentTrack().then getCurrentTrack, console.error.bind(console)
+
+  robot.response /blacklist/i, (res) ->
+    song_blacklist = robot.brain.get 'music-blacklist'
+    if not song_blacklist
+      song_blacklist = []
+    artist_blacklist = robot.brain.get 'music-blacklist-artists'
+    if not artist_blacklist
+      artist_blacklist = []
+    out = "Commands:\n"
+    out += "  'blacklist' - Shows help and current blacklist\n"
+    out += "  'blacklist song' - Blacklists the currently playing song\n"
+    out += "  'blacklist artist' - List artists of current song to blacklist\n"
+    out += "  'blacklist artist (id)' - Blacklists an artist from current song\n"
+    out += "  'blacklist artist (name)' - List artists of current song to blacklist\n"
+    out += "  'blacklist remove (id)' - Remove song from blacklist using id\n"
+    out += "  'blacklist remove artist (id)' - Remove artist from blacklist using id\n"
+    out += "\n"
+    out += "Current song list:"
+    out += "  [#{index}] - #{title}\n" for title, index in song_blacklist
+    out += "\n"
+    out += "Current artist list:"
+    out += "  [#{index}] - #{artist}\n" for artist, index in artist_blacklist
 
   robot.respond /set volume (\d+)/i, (message) ->
     newVolume = parseInt(message.match[1])
