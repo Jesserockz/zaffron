@@ -42,6 +42,8 @@ module.exports = (robot) ->
     if tltrack
       track = tltrack.track
       blacklist = robot.brain.get 'music-blacklist'
+      if not blacklist
+        blacklist = []
       getCurrentTrack = (t) ->
         if t
           if t.name in blacklist
