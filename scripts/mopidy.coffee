@@ -43,7 +43,7 @@ module.exports = (robot) ->
       track = tltrack.track
       blacklist = robot.brain.get 'music-blacklist'
       if not blacklist
-        blacklist = []
+        return
       getCurrentTrack = (t) ->
         if t
           if t.name in blacklist
@@ -72,7 +72,7 @@ module.exports = (robot) ->
             mopidy.playback.next()
           else
             res.send("Already blacklisted")
-
+    mopidy.playback.getCurrentTrack().then getCurrentTrack, console.error.bind(console)
 
   robot.respond /set volume (\d+)/i, (message) ->
     newVolume = parseInt(message.match[1])
