@@ -1,22 +1,22 @@
 coffeelines = [
-  "Coffee is ready"
-  "Coffee guys, get in the kitchen"
-  "Brew complete"
-  "Stop, Coffee time"
+  "Coffee is ready",
+  "Coffee guys, get in the kitchen",
+  "Brew complete",
+  "Stop, Coffee time",
   "Fresh cup of joe everybody"
 ]
 
 mornings = [
-  "Good morning @all"
-  "Bom dia @all"
-  "Ohayo Gozaimasu @all"
-  "Bore da @all"
-  "God morgon @all"
-  "Guete Morge @all"
-  "God morgen @all"
-  "Kia ora @all"
-  "Buenos dias @all"
-  "Guten Morgen @all"
+  "Good morning @all",
+  "Bom dia @all",
+  "Ohayo Gozaimasu @all",
+  "Bore da @all",
+  "God morgon @all",
+  "Guete Morge @all",
+  "God morgen @all",
+  "Kia ora @all",
+  "Buenos dias @all",
+  "Guten Morgen @all",
   "Bonjour @all"
 ]
 

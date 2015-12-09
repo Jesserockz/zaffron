@@ -30,16 +30,44 @@ mopidy.on 'state:online', ->
 mopidy.on 'state:offline', ->
   online = false
 
+getCurrentTrack = (track) ->
+  if track
+    
+  else
+    message.send("No track is playing")
+
 module.exports = (robot) ->
-  # mopidy.on 'event:trackPlaybackStarted', (obj) ->
-  #   tltrack = obj.tl_track
-  #   if tltrack
-  #     track = tltrack.track
-  #     robot.messageRoom("55213_wump_music@conf.hipchat.com", "Currently playing: #{track.name} by #{track.artists[0].name} from #{track.album.name}")
-  #     robot.messageRoom("55213_wump_music@conf.hipchat.com", "/topic #{track.name} by #{track.artists[0].name}")
+  mopidy.on 'event:trackPlaybackStarted', (obj) ->
+    tltrack = obj.tl_track
+    if tltrack
+      track = tltrack.track
+      blacklist = robot.brain.get 'music-blacklist'
+      getCurrentTrack = (t) ->
+        if t
+          if t.name in blacklist
+            mopidy.playback.next()
+            mopidy.playback.getCurrentTrack().then getCurrentTrack, console.error.bind(console)
+      if track.name in blacklist
+          mopidy.playback.next()
+          mopidy.playback.getCurrentTrack().then getCurrentTrack, console.error.bind(console)
+      
+      # robot.messageRoom("55213_wump_music@conf.hipchat.com", "Currently playing: #{track.name} by #{track.artists[0].name} from #{track.album.name}")
+      # robot.messageRoom("55213_wump_music@conf.hipchat.com", "/topic #{track.name} by #{track.artists[0].name}")
   #   else
   #     robot.messageRoom("55213_wump_music@conf.hipchat.com", "No music is playing")
   #     robot.messageRoom("55213_wump_music@conf.hipchat.com", "/topic No track is playing")
+
+  robot.respond /blacklist/i, (res) ->
+    blacklist = robot.brain.get 'music-blacklist'
+    getCurrentTrack = (t) ->
+        if t
+          if t.name not in blacklist
+            blacklist.push t.name
+            robot.brain.set 'music-blacklist', blacklist
+            res.send("Blacklisted #{t.name}")
+          else
+            res.send("Already blacklisted")
+
 
   robot.respond /set volume (\d+)/i, (message) ->
     newVolume = parseInt(message.match[1])
