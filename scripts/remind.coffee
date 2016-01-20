@@ -57,7 +57,7 @@ class Reminders
     now = (new Date).getTime()
     trigger = =>
       reminder = @removeFirst()
-      @robot.reply(reminder.msg_envelope, ', ' + reminder.action + ' now!')
+      @robot.reply(reminder.msg_envelope, ' ' + reminder.action + ' now!')
       @queue()
     # setTimeout uses a 32-bit INT
     extendTimeout = (timeout, callback) ->
@@ -161,8 +161,10 @@ module.exports = (robot) ->
     type = msg.match[2]
     time = msg.match[3]
     action = msg.match[4]
-    msg_env = msg.envelope
-    msg_env.user = userForMentionName(robot, who)
+    msg_env = 
+      room: msg.envelope.room
+      user: userForMentionName(robot, who)
+      message: msg.envelope.message
     options =
       msg_envelope: msg_env,
       action: action
@@ -182,7 +184,10 @@ userForMentionName = (robot, name) ->
   lowerName = name.toLowerCase()
 
   for k of (robot.brain.data.users or { })
-    mentionName = robot.brain.data.users[k]['mention_name']      
+    mentionName = robot.brain.data.users[k]['mention_name']
     if mentionName? and mentionName.toLowerCase() is lowerName
       result = robot.brain.data.users[k]
+      console.log mentionName
+      for key, value of result
+        console.log key + ": " + value
   result
