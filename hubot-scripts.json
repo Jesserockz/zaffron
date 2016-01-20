@@ -3,6 +3,5 @@
   "announce.coffee",
   "weather.coffee",
   "hubot-rss-reader",
-  "remind.coffee",
   "corgime.coffee"
 ]
