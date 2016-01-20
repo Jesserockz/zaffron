@@ -156,7 +156,7 @@ module.exports = (robot) ->
     msg.send "I'll remind you to #{action} #{reminder.formatDue()}"
   )
 
-  robot.respond(/remind (@\w*) (in|on) (.+?) to (.*)/i, (msg) ->
+  robot.respond(/remind @(\w*) (in|on) (.+?) to (.*)/i, (msg) ->
     who = msg.match[1]
     type = msg.match[2]
     time = msg.match[3]
