@@ -115,14 +115,14 @@ module.exports = (robot) ->
     out += "  'blacklist song' - Blacklists the currently playing song\n"
     out += "  'blacklist artist' - List artists of current song to blacklist\n"
     out += "  'blacklist artist (id)' - Blacklists an artist from current song\n"
-    out += "  'blacklist artist (name)' - List artists of current song to blacklist\n"
+    out += "  'blacklist artist (name)' - Blacklists an artist\n"
     out += "  'blacklist remove (id)' - Remove song from blacklist using id\n"
     out += "  'blacklist remove artist (id)' - Remove artist from blacklist using id\n"
     out += "\n"
     out += "Current song list:\n"
     out += "  [#{index}] - #{title}\n" for title, index in song_blacklist
     out += "\n"
-    out += "Current artist list:"
+    out += "Current artist list:\n"
     out += "  [#{index}] - #{artist}\n" for artist, index in artist_blacklist
     res.send(out)
 
@@ -131,10 +131,22 @@ module.exports = (robot) ->
     song_blacklist = robot.brain.get 'music-blacklist'
     if not song_blacklist
       song_blacklist = []
-    if index < song_blacklist.list
+    if index < song_blacklist.length
       title = song_blacklist[index]
       song_blacklist.splice(title, 1)
       res.send("Removed " + title + " from blacklist")
+    else
+      res.send("Invalid id")
+
+  robot.respond /blacklist remove artist (\d+)/i, (res) ->
+    index = res.match[1]
+    artist_blacklist = robot.brain.get 'music-blacklist-artists'
+    if not artist_blacklist
+      artist_blacklist = []
+    if index < artist_blacklist.length
+      artist = artist_blacklist[index]
+      artist_blacklist.splice(artist, 1)
+      res.send("Removed artist " + artist + " from blacklist")
     else
       res.send("Invalid id")
 
