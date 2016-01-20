@@ -58,6 +58,7 @@ class Reminders
     trigger = =>
       reminder = @removeFirst()
       @robot.reply(reminder.msg_envelope, ' ' + reminder.action + ' now!')
+      console.log "#{inspect reminder}"
       @queue()
     # setTimeout uses a 32-bit INT
     extendTimeout = (timeout, callback) ->
