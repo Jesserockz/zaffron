@@ -157,6 +157,28 @@ module.exports = (robot) ->
   #   msg.send "I'll remind you to #{action} #{reminder.formatDue()}"
   # )
 
+  robot.respond(/remind (@\w*|me) to (.*) (in|on) (.+)/i, (msg) ->
+    who = msg.match[1]
+    if who == 'me'
+      who = '@' + msg.message.user.mention_name
+    action = msg.match[2]
+    type = msg.match[3]
+    time = msg.match[4]
+    options =
+      msg_envelope: msg_env
+      action: action
+      time: time
+      user: who
+    if type is 'on'
+      # parse the date (convert to timestamp)
+      due = chrono.parseDate(time).getTime()
+      if due.toString() isnt 'Invalid Date'
+        options.due = due
+    reminder = new Reminder(options)
+    reminders.add(reminder)
+    msg.send "Roger, roger. T minus #{reminder.formatDue()}"
+  )
+
   robot.respond(/remind (@\w*|me) (in|on) (.+?) to (.*)/i, (msg) ->
     who = msg.match[1]
     if who == 'me'
@@ -176,7 +198,7 @@ module.exports = (robot) ->
         options.due = due
     reminder = new Reminder(options)
     reminders.add(reminder)
-    msg.send "Ok, I'll remind them #{reminder.formatDue()}"
+    msg.send "OK. #{reminder.formatDue()} to go"
   )
 
 userForMentionName = (robot, name) ->
