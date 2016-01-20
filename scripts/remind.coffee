@@ -57,8 +57,7 @@ class Reminders
     now = (new Date).getTime()
     trigger = =>
       reminder = @removeFirst()
-      @robot.reply(reminder.msg_envelope, ' ' + reminder.action + ' now!')
-      console.log "#{inspect reminder}"
+      @robot.send(reminder.msg_envelope, '@' + reminder.user + ' ' + reminder.action + ' now!')
       @queue()
     # setTimeout uses a 32-bit INT
     extendTimeout = (timeout, callback) ->
@@ -77,7 +76,7 @@ class Reminders
 
 class Reminder
   constructor: (data) ->
-    {@msg_envelope, @action, @time, @due} = data
+    {@msg_envelope, @action, @time, @due, @user} = data
 
     if @time and !@due
       @time.replace(/^\s+|\s+$/g, '')
@@ -139,37 +138,37 @@ module.exports = (robot) ->
     msg.send("Deleted reminder #{query}") if reminders.cache.length isnt prevLength
   )
 
-  robot.respond(/remind me (in|on) (.+?) to (.*)/i, (msg) ->
-    type = msg.match[1]
-    time = msg.match[2]
-    action = msg.match[3]
-    options =
-      msg_envelope: msg.envelope,
-      action: action
-      time: time
-    if type is 'on'
-      # parse the date (convert to timestamp)
-      due = chrono.parseDate(time).getTime()
-      if due.toString() isnt 'Invalid Date'
-        options.due = due
-    reminder = new Reminder(options)
-    reminders.add(reminder)
-    msg.send "I'll remind you to #{action} #{reminder.formatDue()}"
-  )
+  # robot.respond(/remind me (in|on) (.+?) to (.*)/i, (msg) ->
+  #   type = msg.match[1]
+  #   time = msg.match[2]
+  #   action = msg.match[3]
+  #   options =
+  #     msg_envelope: msg.envelope
+  #     action: action
+  #     time: time
+  #     user: msg.message.user.mention_name
+  #   if type is 'on'
+  #     # parse the date (convert to timestamp)
+  #     due = chrono.parseDate(time).getTime()
+  #     if due.toString() isnt 'Invalid Date'
+  #       options.due = due
+  #   reminder = new Reminder(options)
+  #   reminders.add(reminder)
+  #   msg.send "I'll remind you to #{action} #{reminder.formatDue()}"
+  # )
 
-  robot.respond(/remind @(\w*) (in|on) (.+?) to (.*)/i, (msg) ->
+  robot.respond(/remind (@\w*|me) (in|on) (.+?) to (.*)/i, (msg) ->
     who = msg.match[1]
+    if who == 'me'
+      who = '@' + msg.message.user.mention_name
     type = msg.match[2]
     time = msg.match[3]
     action = msg.match[4]
-    msg_env = 
-      room: msg.envelope.room
-      user: userForMentionName(robot, who)
-      message: msg.envelope.message
     options =
-      msg_envelope: msg_env,
+      msg_envelope: msg_env
       action: action
       time: time
+      user: who
     if type is 'on'
       # parse the date (convert to timestamp)
       due = chrono.parseDate(time).getTime()
@@ -177,7 +176,7 @@ module.exports = (robot) ->
         options.due = due
     reminder = new Reminder(options)
     reminders.add(reminder)
-    msg.send "Ok, I'll remind them to #{action} #{reminder.formatDue()}"
+    msg.send "Ok, I'll remind them #{reminder.formatDue()}"
   )
 
 userForMentionName = (robot, name) ->
