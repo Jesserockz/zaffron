@@ -138,25 +138,6 @@ module.exports = (robot) ->
     msg.send("Deleted reminder #{query}") if reminders.cache.length isnt prevLength
   )
 
-  # robot.respond(/remind me (in|on) (.+?) to (.*)/i, (msg) ->
-  #   type = msg.match[1]
-  #   time = msg.match[2]
-  #   action = msg.match[3]
-  #   options =
-  #     msg_envelope: msg.envelope
-  #     action: action
-  #     time: time
-  #     user: msg.message.user.mention_name
-  #   if type is 'on'
-  #     # parse the date (convert to timestamp)
-  #     due = chrono.parseDate(time).getTime()
-  #     if due.toString() isnt 'Invalid Date'
-  #       options.due = due
-  #   reminder = new Reminder(options)
-  #   reminders.add(reminder)
-  #   msg.send "I'll remind you to #{action} #{reminder.formatDue()}"
-  # )
-
   robot.respond(/remind (@\w*|me) to (.*) (in|on) (.+)/i, (msg) ->
     who = msg.match[1]
     if who == 'me'
