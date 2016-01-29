@@ -25,8 +25,8 @@ module.exports = (robot) ->
     req.get() (err, res, body) ->
       json = JSON.parse(body)
       if json.status == 'major'
-        msg.reply 'GITHUB IS DOWN!!! (omg) - ' + json.body
+        msg.reply 'GITHUB CRASHED!!! (omg) - ' + json.body
       else if json.status == 'minor'
         msg.reply 'GitHub had an accident (lol) - ' + json.body
       else
-        msg.reply 'GitHub reports 200 across the board - ' + json.body
+        msg.reply 'GitHub - ' + json.body
