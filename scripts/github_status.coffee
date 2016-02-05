@@ -10,7 +10,6 @@ module.exports = (robot) ->
     req = robot.http("https://status.github.com/api/last-message.json")
     req.get() (err, res, body) ->
       json = JSON.parse(body)
-      console.log(json.body)
       if json.created_on != previous_timestamp
         if json.status == 'major'
           robot.messageRoom room, '@all GITHUB CRASHED!!! (omg) - ' + json.body

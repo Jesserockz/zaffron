@@ -146,7 +146,7 @@ module.exports = (robot) ->
     type = msg.match[3]
     time = msg.match[4]
     options =
-      msg_envelope: msg_env
+      msg_envelope: msg.envelope
       action: action
       time: time
       user: who
@@ -157,7 +157,7 @@ module.exports = (robot) ->
         options.due = due
     reminder = new Reminder(options)
     reminders.add(reminder)
-    msg.send "Roger, roger. T minus #{reminder.formatDue()}"
+    msg.send "Roger, roger. Clear for launch #{reminder.formatDue()}"
   )
 
   robot.respond(/remind (@\w*|me) (in|on) (.+?) to (.*)/i, (msg) ->
@@ -168,7 +168,7 @@ module.exports = (robot) ->
     time = msg.match[3]
     action = msg.match[4]
     options =
-      msg_envelope: msg_env
+      msg_envelope: msg.envelope
       action: action
       time: time
       user: who
@@ -179,18 +179,5 @@ module.exports = (robot) ->
         options.due = due
     reminder = new Reminder(options)
     reminders.add(reminder)
-    msg.send "OK. #{reminder.formatDue()} to go"
+    msg.send "OK. Will do #{reminder.formatDue()}"
   )
-
-userForMentionName = (robot, name) ->
-  result = null
-  lowerName = name.toLowerCase()
-
-  for k of (robot.brain.data.users or { })
-    mentionName = robot.brain.data.users[k]['mention_name']
-    if mentionName? and mentionName.toLowerCase() is lowerName
-      result = robot.brain.data.users[k]
-      console.log mentionName
-      for key, value of result
-        console.log key + ": " + value
-  result
