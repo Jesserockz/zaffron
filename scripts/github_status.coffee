@@ -12,11 +12,11 @@ module.exports = (robot) ->
       json = JSON.parse(body)
       if json.created_on != previous_timestamp
         if json.status == 'major'
-          robot.messageRoom room, '@all GITHUB CRASHED!!! (omg) - ' + json.body
+          robot.messageRoom room, 'GITHUB CRASHED!!! (omg) - ' + json.body
         else if json.status == 'minor'
-          robot.messageRoom room, '@all GitHub had an accident (lol) - ' + json.body
+          robot.messageRoom room, 'GitHub had an accident (lol) - ' + json.body
         else
-          robot.messageRoom room, '@all GitHub - ' + json.body
+          robot.messageRoom room, 'GitHub - ' + json.body
         previous_timestamp = json.created_on
 
   robot.respond /github/i, (msg) ->
