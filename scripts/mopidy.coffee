@@ -20,7 +20,9 @@
 #   eriley
 
 
-
+if !process.env.HUBOT_MOPIDY_URL
+  return
+  
 Mopidy = require("mopidy")
 
 mopidy = new Mopidy(webSocketUrl: process.env.HUBOT_MOPIDY_URL+'/mopidy/ws/')
